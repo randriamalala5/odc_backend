@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 //     ]);
 //   };
 
+// CREATE USER
 exports.createUserNotHashed = (req, res) => {
     const { name,lastname, email, number, pass } = req.body;
   
@@ -30,6 +31,7 @@ exports.createUserNotHashed = (req, res) => {
     });
   };
 
+// CREATE AN USER
   exports.createUser = async (req, res) => {
     const { name, lastname, email, number, pass } = req.body;
   
@@ -73,6 +75,7 @@ exports.createUserNotHashed = (req, res) => {
     }
   };
 
+// READ ALL USERS
 exports.getAllUsers = (req, res) => {
   db.query('SELECT * FROM users', (err, results) => {
     if (err) {
@@ -82,6 +85,35 @@ exports.getAllUsers = (req, res) => {
   });
 };
 
+// READ AN USER by HIS ID
+exports.getUser = async (req, res) => {
+  const {id} = req.params;
+  try{
+    const [rows] = await db.promise().query('SELECT * FROM users WHERE usr_id=?', [id]);
+    if (rows.length == 0){
+      return res.status(404).json({error: 'Utilisateur non trouve'});
+    }
+    res.status(200).json(rows[0]);
+  } catch (err){
+    res.status(500).json({error: 'Erreur du serveur'})
+  };
+};
+
+// exports.getUserById = async (req, res) => {
+//   const { id } = req.params;
+//   try {
+//     const [rows] = await db.promise().query('SELECT * FROM users WHERE usr_id = ?', [id]);
+//     if (rows.length === 0) {
+//       return res.status(404).json({ error: 'Utilisateur non trouvé.' });
+//     }
+//     res.status(200).json(rows[0]);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: 'Erreur serveur' });
+//   }
+// };
+
+// LOGIN
 exports.loginUser = async (req, res) => {
   const { email, pass } = req.body;
 
