@@ -113,6 +113,21 @@ exports.getUser = async (req, res) => {
 //   }
 // };
 
+// DELETE AN USER
+exports.deleteUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [result] = await db.promise().query('DELETE FROM users WHERE usr_id = ?', [id]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Utilisateur non trouvé.' });
+    }
+    res.status(200).json({ message: 'Utilisateur supprimé avec succès.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
+
 // LOGIN
 exports.loginUser = async (req, res) => {
   const { email, pass } = req.body;
