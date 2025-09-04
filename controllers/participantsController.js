@@ -3,37 +3,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const validator = require('validator');
 
-// exports.getAllDbUsers = (req, res) => {
-//     res.json([
-//       { id: 1, name: 'Andre' },
-//       { id: 2, name: 'Felix' }
-//     ]);
-//   };
 
-// CREATE USER
-exports.createUserNotHashed = (req, res) => {
-    const { name,lastname, email, number, pass } = req.body;
-  
-    if (!name || !email || !pass) {
-      return res.status(400).json({ error: 'Nom et email requis' });
-    }
-  
-    const query = 'INSERT INTO users (usr_name, usr_lastname, usr_mail, usr_number, usr_pass) VALUES (?, ?, ?, ?, ?)';
-    db.query(query, [name, lastname, email, number, pass], (err, result) => {
-      if (err) {
-        console.error('Erreur SQL :', err.message);
-        return res.status(500).json({ error: 'Erreur lors de l\'insertion' });
-      }
-  
-      res.status(201).json({
-        message: 'Utilisateur créé avec succès',
-        userId: result.insertId
-      });
-    });
-  };
-
-// CREATE AN USER
-  exports.createUser = async (req, res) => {
+// CREATE AN PARTICIPANT
+  exports.createParticipant = async (req, res) => {
     const { name, lastname, email, number, pass } = req.body;
   
     // Validation basique
@@ -76,8 +48,8 @@ exports.createUserNotHashed = (req, res) => {
     }
   };
 
-// READ ALL USERS
-exports.getAllUsers = (req, res) => {
+// READ ALL PARTICIPANT
+exports.getAllParticipants = (req, res) => {
   db.query('SELECT * FROM users', (err, results) => {
     if (err) {
       return res.status(500).json({ error: 'Erreur SQL' });
@@ -86,8 +58,8 @@ exports.getAllUsers = (req, res) => {
   });
 };
 
-// READ AN USER by HIS ID
-exports.getUser = async (req, res) => {
+// READ AN PARTICIPANT by HIS ID
+exports.getParticipant = async (req, res) => {
   const {id} = req.params;
   try{
     const [rows] = await db.promise().query('SELECT * FROM users WHERE usr_id=?', [id]);
@@ -100,22 +72,8 @@ exports.getUser = async (req, res) => {
   };
 };
 
-// exports.getUserById = async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     const [rows] = await db.promise().query('SELECT * FROM users WHERE usr_id = ?', [id]);
-//     if (rows.length === 0) {
-//       return res.status(404).json({ error: 'Utilisateur non trouvé.' });
-//     }
-//     res.status(200).json(rows[0]);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: 'Erreur serveur' });
-//   }
-// };
-
-// UPDATE AN USER by HIS ID
-exports.updateUser = async (req, res) => {
+// UPDATE AN PARTICIPANT by HIS ID
+exports.updateParticipant = async (req, res) => {
   const { id } = req.params;
   let { name, lastname, email, number, pass } = req.body;
 
@@ -176,8 +134,8 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// DELETE AN USER
-exports.deleteUser = async (req, res) => {
+// DELETE AN PARTICIPANT
+exports.deleteParticipant = async (req, res) => {
   const { id } = req.params;
   try {
     const [result] = await db.promise().query('DELETE FROM users WHERE usr_id = ?', [id]);
@@ -190,47 +148,3 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ error: 'Erreur serveur' });
   }
 };
-
-// LOGIN
-exports.loginUser = async (req, res) => {
-  const { email, pass } = req.body;
-
-  if (!email || !pass) {
-    return res.status(400).json({ error: 'Email et mot de passe requis.' });
-  }
-
-  try {
-    // Vérifier si l’utilisateur existe
-    const [users] = await db.promise().query('SELECT * FROM users WHERE usr_mail = ?', [email]);
-
-    if (users.length === 0) {
-      return res.status(401).json({ error: 'Email non trouve. Veuillez verifiez votre e-mail' });
-    }
-
-    const user = users[0];
-
-    // Comparer le mot de passe
-    const isMatch = await bcrypt.compare(pass, user.usr_pass);
-    if (!isMatch) {
-      return res.status(401).json({ error: 'Email ou mot de passe incorrect.' });
-    }
-
-    // Générer le token JWT
-    const token = jwt.sign(
-      { usr_id: user.usr_id, usr_mail: user.usr_mail },
-      process.env.JWT_SECRET || 'secretdev', // à stocker dans .env
-      { expiresIn: '24h' }
-    );
-
-    res.status(200).json({
-      message: 'CONNEXION REUSSI ✔',
-      email: email,
-      token
-    });
-
-  } catch (err) {
-    console.error('Erreur login :', err.message);
-    res.status(500).json({ error: 'Erreur serveur' });
-  }
-};
-

@@ -7,9 +7,9 @@ const port = process.env.PORT;
 const router = express.Router();
 
 const dotenv = require('dotenv');
-const userRoutes = require('./routes/users');
+const userRoutes = require('./routes/utilisateurs');
 const participantRoutes = require('./routes/participants');
-const { loginUser } = require('../controllers/usersController');
+const { loginUserss } = require('./controllers/utilisateursController');
 
 dotenv.config();
 const app = express();
@@ -23,7 +23,7 @@ const options = {
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/prt', participantRoutes);
-router.post('/login', loginUser);
+app.post('/login', loginUserss);
 // app.use('/api/users/dbu', userRoutes);
 // router.post('/', createUser);
 
@@ -35,7 +35,8 @@ app.get('/hello', (req, res) => {
 //     console.log('Server is running in https://localhost:3000');
 // });
 
-
 https.createServer(options, app).listen(port, () => {
     console.log('HTTPS server running on https://localhost:3000');
   });
+
+

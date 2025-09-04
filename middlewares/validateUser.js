@@ -1,7 +1,7 @@
 const validator = require('validator');
 
 module.exports = (req, res, next) => {
-  const { name, email } = req.body;
+  const { pseudo, email } = req.body;
 
   // Vérification des champs obligatoires
   // if (!name || !email) {
@@ -17,7 +17,7 @@ module.exports = (req, res, next) => {
   // }
 
   // Longueur minimale du nom
-  if (name.length < 6) {
+  if (pseudo.length < 6) {
     return res.status(400).json({ error: 'Le nom doit contenir au moins 5 caractères.' });
   }
 
