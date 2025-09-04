@@ -186,48 +186,48 @@ exports.deleteUser = async (req, res) => {
 };
 
 // LOGIN
-exports.loginUser = async (req, res) => {
-  const { email, pass } = req.body;
+// exports.loginUser = async (req, res) => {
+//   const { email, pass } = req.body;
 
-  if (!email || !pass) {
-    return res.status(400).json({ error: 'Email et mot de passe requis.' });
-  }
+//   if (!email || !pass) {
+//     return res.status(400).json({ error: 'Email et mot de passe requis.' });
+//   }
 
-  try {
-    // Vérifier si l’utilisateur existe
-    const [users] = await db.promise().query('SELECT * FROM utilisateurs WHERE utl_email = ?', [email]);
+//   try {
+//     // Vérifier si l’utilisateur existe
+//     const [users] = await db.promise().query('SELECT * FROM utilisateurs WHERE utl_email = ?', [email]);
 
-    if (users.length === 0) {
-      return res.status(401).json({ error: 'Email non trouve. Veuillez verifiez votre e-mail' });
-    }
+//     if (users.length === 0) {
+//       return res.status(401).json({ error: 'Email non trouve. Veuillez verifiez votre e-mail' });
+//     }
 
-    const user = users[0];
+//     const user = users[0];
 
-    // Comparer le mot de passe
-    const isMatch = await bcrypt.compare(pass, user.utl_pass);
-    if (!isMatch) { 
-      // return res.status(401).json({ error: 'Email ou mot de passe incorrect.' });
-      return res.status(401).json({ error: user.utl_pass });
-    }
+//     // Comparer le mot de passe
+//     const isMatch = await bcrypt.compare(pass, user.utl_pass);
+//     if (!isMatch) { 
+//       // return res.status(401).json({ error: 'Email ou mot de passe incorrect.' });
+//       return res.status(401).json({ error: user.utl_pass });
+//     }
 
-    // Générer le token JWT
-    const token = jwt.sign(
-      { utl_id: user.utl_id, utl_email: user.utl_email },
-      process.env.JWT_SECRET || 'secretdev', // à stocker dans .env
-      { expiresIn: '24h' }
-    );
+//     // Générer le token JWT
+//     const token = jwt.sign(
+//       { utl_id: user.utl_id, utl_email: user.utl_email },
+//       process.env.JWT_SECRET || 'secretdev', // à stocker dans .env
+//       { expiresIn: '24h' }
+//     );
 
-    res.status(200).json({
-      message: 'CONNEXION REUSSI ✔',
-      email: email,
-      token
-    });
+//     res.status(200).json({
+//       message: 'CONNEXION REUSSI ✔',
+//       email: email,
+//       token
+//     });
 
-  } catch (err) {
-    console.error('Erreur login :', err.message);
-    res.status(500).json({ error: 'Erreur serveur' });
-  }
-};
+//   } catch (err) {
+//     console.error('Erreur login :', err.message);
+//     res.status(500).json({ error: 'Erreur serveur' });
+//   }
+// };
 
 // LOGIN
 exports.loginUsers = async (req, res) => {
@@ -273,44 +273,44 @@ exports.loginUsers = async (req, res) => {
 };
 
 // LOGIN
-exports.loginUserss = async (req, res) => {
-  const { email, pass } = req.body;
+// exports.loginUserss = async (req, res) => {
+//   const { email, pass } = req.body;
 
-  if (!email || !pass) {
-    return res.status(400).json({ error: 'Email et mot de passe requis.' });
-  }
+//   if (!email || !pass) {
+//     return res.status(400).json({ error: 'Email et mot de passe requis.' });
+//   }
 
-  try {
-    // Vérifier si l’utilisateur existe
-    const [users] = await db.promise().query('SELECT * FROM users WHERE usr_mail = ?', [email]);
+//   try {
+//     // Vérifier si l’utilisateur existe
+//     const [users] = await db.promise().query('SELECT * FROM users WHERE usr_mail = ?', [email]);
 
-    if (users.length === 0) {
-      return res.status(401).json({ error: 'Email non trouve. Veuillez verifiez votre e-mail' });
-    }
+//     if (users.length === 0) {
+//       return res.status(401).json({ error: 'Email non trouve. Veuillez verifiez votre e-mail' });
+//     }
 
-    const user = users[0];
+//     const user = users[0];
 
-    // Comparer le mot de passe
-    const isMatch = await bcrypt.compare(pass, user.usr_pass);
-    if (!isMatch) {
-      return res.status(401).json({ error: 'Email ou mot de passe incorrect.' });
-    }
+//     // Comparer le mot de passe
+//     const isMatch = await bcrypt.compare(pass, user.usr_pass);
+//     if (!isMatch) {
+//       return res.status(401).json({ error: 'Email ou mot de passe incorrect.' });
+//     }
 
-    // Générer le token JWT
-    const token = jwt.sign(
-      { usr_id: user.usr_id, usr_mail: user.usr_mail },
-      process.env.JWT_SECRET || 'secretdev', // à stocker dans .env
-      { expiresIn: '24h' }
-    );
+//     // Générer le token JWT
+//     const token = jwt.sign(
+//       { usr_id: user.usr_id, usr_mail: user.usr_mail },
+//       process.env.JWT_SECRET || 'secretdev', // à stocker dans .env
+//       { expiresIn: '24h' }
+//     );
 
-    res.status(200).json({
-      message: 'CONNEXION REUSSI ✔',
-      email: email,
-      token
-    });
+//     res.status(200).json({
+//       message: 'CONNEXION REUSSI ✔',
+//       email: email,
+//       token
+//     });
 
-  } catch (err) {
-    console.error('Erreur login :', err.message);
-    res.status(500).json({ error: 'Erreur serveur' });
-  }
-};
+//   } catch (err) {
+//     console.error('Erreur login :', err.message);
+//     res.status(500).json({ error: 'Erreur serveur' });
+//   }
+// };
