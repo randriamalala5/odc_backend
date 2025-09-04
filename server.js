@@ -8,7 +8,7 @@ const router = express.Router();
 
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/users');
-const createUser = require('./routes/users');
+// const createUser = require('./routes/users');
 
 
 dotenv.config();
@@ -23,7 +23,7 @@ const options = {
 // Routes
 app.use('/api/users', userRoutes);
 // app.use('/api/users/dbu', userRoutes);
-router.post('/', createUser);
+// router.post('/', createUser);
 
 app.get('/hello', (req, res) => {
     res.send('Hello bro');
