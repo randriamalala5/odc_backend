@@ -8,8 +8,8 @@ const router = express.Router();
 
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/users');
-// const createUser = require('./routes/users');
-
+const participantRoutes = require('./routes/participants');
+const { loginUser } = require('../controllers/usersController');
 
 dotenv.config();
 const app = express();
@@ -22,6 +22,8 @@ const options = {
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/prt', participantRoutes);
+router.post('/login', loginUser);
 // app.use('/api/users/dbu', userRoutes);
 // router.post('/', createUser);
 

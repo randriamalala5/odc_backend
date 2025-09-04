@@ -219,7 +219,7 @@ exports.loginUser = async (req, res) => {
     const token = jwt.sign(
       { usr_id: user.usr_id, usr_mail: user.usr_mail },
       process.env.JWT_SECRET || 'secretdev', // à stocker dans .env
-      { expiresIn: '2h' }
+      { expiresIn: '24h' }
     );
 
     res.status(200).json({
