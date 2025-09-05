@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Authentification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center vh-100">
+  <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+    <!-- <div class="text-center mb-3">
+      <img src="images/login-icon.png" alt="Login" class="rounded-circle shadow" style="width: 80px; height: 80px;">
+    </div> -->
+    <div class="text-center mb-5">
+        <!-- <img src="images/login.png" alt="Login" class="rounded-circle shadow" style="width: 80px; height: 80px;"> -->
+        <img src="images/login.png" alt="Login" class="rounded-circle shadow" style="width: 80px; height: 80px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+    </div>
+
+    <!-- Formulaire de connexion -->
+    <form id="loginForm">
+      <!-- <h5 class="text-center mb-3">🔐 Connexion</h5> -->
+      <div class="mb-4">
+        <input type="email" class="form-control" id="loginEmail" placeholder="Email" required>
+      </div>
+      <div class="mb-4">
+        <input type="password" class="form-control" id="loginPass" placeholder="Mot de passe" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+      <hr>
+      <p class="mt-3 text-center">
+        Pas encore inscrit ?
+        <a href="#" onclick="toggleForms()">Créer un compte</a>
+      </p>
+    </form>
+
+    <!-- Formulaire d'inscription -->
+    <form id="registerForm" class="d-none">
+      <!-- <h5 class="text-center mb-3">📝 Inscription</h5> -->
+      <!-- <div class="mb-2">
+        <input type="text" class="form-control" id="regNom" placeholder="Nom" required>
+      </div> -->
+      <div class="mb-4">
+        <input type="text" class="form-control" id="regNom" placeholder="Pseudo" required>
+      </div>
+      <!-- <div class="mb-2">
+        <input type="text" class="form-control" id="regPrenom" placeholder="Prénom" required>
+      </div> -->
+      <div class="mb-4">
+        <input type="email" class="form-control" id="regEmail" placeholder="Email" required>
+      </div>
+      <!-- <div class="mb-2">
+        <input type="text" class="form-control" id="regNumber" placeholder="Téléphone">
+      </div> -->
+      <div class="mb-4">
+        <input type="password" class="form-control" id="regPass" placeholder="Mot de passe" required>
+      </div>
+      <button type="submit" class="btn btn-success w-100">S'inscrire</button>
+      <hr>
+      <p class="mt-3 text-center">
+        Déjà inscrit ?
+        <a href="#" onclick="toggleForms()">Se connecter</a>
+      </p>
+    </form>
+    
+    <div id="message" class="alert alert-info text-center d-none mt-3"></div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const messageDiv = document.getElementById('message');
+
+    function toggleForms() {
+      loginForm.classList.toggle('d-none');
+      registerForm.classList.toggle('d-none');
+      messageDiv.classList.add('d-none');
+      messageDiv.textContent = '';
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      messageDiv.classList.add('d-none');
+      const email = document.getElementById('loginEmail').value;
+      const pass = document.getElementById('loginPass').value;
+
+      try {
+        const res = await fetch('https://localhost:3000/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, pass })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          localStorage.setItem('token', data.token);
+          window.location.href = 'dashboard.html';
+        } else {
+          messageDiv.textContent = data.error || 'Erreur de connexion';
+          messageDiv.classList.remove('d-none');
+          messageDiv.classList.replace('alert-info', 'alert-danger');
+        }
+      } catch (err) {
+        messageDiv.textContent = 'Erreur serveur';
+        messageDiv.classList.remove('d-none');
+        messageDiv.classList.replace('alert-info', 'alert-danger');
+      }
+    });
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      messageDiv.classList.add('d-none');
+      const pseudo = document.getElementById('regNom').value;
+      const email = document.getElementById('regEmail').value;
+      const pass = document.getElementById('regPass').value;
+
+      try {
+        const res = await fetch('https://localhost:3000/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            pseudo: pseudo ,
+            email: email,
+            pass: pass
+          })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          messageDiv.textContent = '✅ Compte créé avec succès ! Vous pouvez maintenant vous connecter.';
+          messageDiv.classList.remove('d-none');
+          messageDiv.classList.replace('alert-danger', 'alert-info');
+          toggleForms();
+        } else {
+          messageDiv.textContent = data.error || 'Erreur d’inscription';
+          messageDiv.classList.remove('d-none');
+          messageDiv.classList.replace('alert-info', 'alert-danger');
+        }
+      } catch (err) {
+        messageDiv.textContent = 'Erreur serveur';
+        messageDiv.classList.remove('d-none');
+        messageDiv.classList.replace('alert-info', 'alert-danger');
+      }
+    });
+  </script>
+</body>
+</html>

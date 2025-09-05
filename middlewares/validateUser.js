@@ -17,7 +17,7 @@ module.exports = (req, res, next) => {
   // }
 
   // Longueur minimale du nom
-  if (pseudo.length < 6) {
+  if (!pseudo || pseudo.length < 6) {
     return res.status(400).json({ error: 'Le nom doit contenir au moins 5 caractères.' });
   }
 

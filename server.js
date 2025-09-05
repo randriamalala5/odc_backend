@@ -5,6 +5,7 @@ const https = require('https');
 const fs = require('fs');
 const port = process.env.PORT;
 const router = express.Router();
+const path = require('path');
 
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/utilisateurs');
@@ -20,9 +21,12 @@ const options = {
     cert: fs.readFileSync('keys/cert.pem')
   };
 
+// Servir les fichiers HTML, CSS, JS depuis /public
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Routes
 app.use('/api/users', userRoutes);
-app.use('/api/prt', participantRoutes);
+app.use('/api/participants', participantRoutes);
 app.post('/login', loginUsers);
 // app.use('/api/users/dbu', userRoutes);
 // router.post('/', createUser);

@@ -90,12 +90,34 @@ exports.getUser = async (req, res) => {
   try{
     const [rows] = await db.promise().query('SELECT * FROM utilisateurs WHERE utl_id=?', [id]);
     if (rows.length == 0){
-      return res.status(404).json({error: 'Utilisateur non trouve'});
+      return res.status(404).json({error: 'On ne trouve pas cet Utilisateur (READ ONE)'});
     }
     res.status(200).json(rows[0]);
   } catch (err){
     res.status(500).json({error: 'Erreur du serveur'})
   };
+};
+
+// GET USER PROFILE
+exports.getProfile = async (req, res) => {
+  const userId = req.user.utl_id; // Injecté par le middleware JWT
+
+  try {
+    const [rows] = await db.promise().query('SELECT * FROM utilisateurs WHERE utl_id = ?',[userId]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Utilisateur non trouvé (GET PROFILE)' });
+    }
+
+    res.status(200).json({
+      message: 'Profil utilisateur récupéré ✔',
+      profil: rows[0]
+    });
+
+  } catch (err) {
+    console.error('Erreur profil :', err.message);
+    res.status(500).json({ error: 'Erreur serveur.' });
+  }
 };
 
 // exports.getUserById = async (req, res) => {
@@ -121,7 +143,7 @@ exports.updateUser = async (req, res) => {
     // Vérifier existence
     const [existing] = await db.promise().query('SELECT * FROM utilisateurs WHERE utl_id = ?', [id]);
     if (existing.length === 0) {
-      return res.status(404).json({ error: 'Utilisateur non trouvé.' });
+      return res.status(404).json({ error: 'Utilisateur non trouvé (UPDATE).' });
     }
 
     // Si on met à jour l'email, s'assurer qu'il est unique
@@ -176,7 +198,7 @@ exports.deleteUser = async (req, res) => {
   try {
     const [result] = await db.promise().query('DELETE FROM utilisateurs WHERE utl_id = ?', [id]);
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Utilisateur non trouvé.' });
+      return res.status(404).json({ error: 'Utilisateur non trouvé (DELETE)' });
     }
     res.status(200).json({ message: `Utilisateur ${id} supprimé avec succès.` });
   } catch (err) {
@@ -231,7 +253,7 @@ exports.deleteUser = async (req, res) => {
 
 // LOGIN
 exports.loginUsers = async (req, res) => {
-  const { email, pass } = req.body;
+  const { email, pass } = req.body || {};
 
   if (!email || !pass) {
     return res.status(400).json({ error: 'Email et mot de passe requis.' });
@@ -262,6 +284,8 @@ exports.loginUsers = async (req, res) => {
 
     res.status(200).json({
       message: 'CONNEXION REUSSI ✔',
+      id: user.utl_id,
+      pseudo: user.utl_pseudo,
       email: email,
       token
     });
