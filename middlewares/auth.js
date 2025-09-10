@@ -16,5 +16,6 @@ module.exports = (req, res, next) => {
     next();
   } catch (err) {
     return res.status(403).json({ error: `Token invalide ou expiré. ${authHeader}` });
+
   }
 };

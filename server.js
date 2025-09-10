@@ -10,7 +10,8 @@ const path = require('path');
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/utilisateurs');
 const participantRoutes = require('./routes/participants');
-const { loginUsers } = require('./controllers/utilisateursController');
+const { loginUsers } = require('./controllers/sbusersController');
+const testRoutes = require('./routes/test');
 
 dotenv.config();
 const app = express();
@@ -31,6 +32,8 @@ app.post('/login', loginUsers);
 // app.use('/api/users/dbu', userRoutes);
 // router.post('/', createUser);
 
+
+app.use('/api', testRoutes);
 app.get('/hello', (req, res) => {
     res.send('Hello bro');
 });

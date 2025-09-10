@@ -19,6 +19,7 @@
   "homepage": "https://github.com/randriamalala5/odc_backend#readme",
   "description": "",
   "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",

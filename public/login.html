@@ -54,7 +54,7 @@
           window.location.href = 'dashboard.html';
         } else {
           document.getElementById('message').textContent = data.error || 'Erreur de connexion';
-            document.getElementById('message').classList.remove('d-none');
+          document.getElementById('message').classList.remove('d-none');
         }
       } catch (err) {
         document.getElementById('message').textContent = 'Connexion impossible !';

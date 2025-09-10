@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { getAllUsers, getUser, getProfile } = require('../controllers/utilisateursController');
+const { getAllUsers, getUser, getProfile } = require('../controllers/sbusersController');// require('../controllers/utilisateursController');
 // const { getAllDbUsers } = require('../controllers/usersController');
-const { createUser } = require('../controllers/utilisateursController');
-const { deleteUser } = require('../controllers/utilisateursController');
-const { updateUser } = require('../controllers/utilisateursController');
+const { createUser } = require('../controllers/sbusersController'); // require('../controllers/utilisateursController');
+const { deleteUser } = require('../controllers/sbusersController'); // require('../controllers/utilisateursController');
+const { updateUser } = require('../controllers/sbusersController'); // require('../controllers/utilisateursController');
 // const { loginUser } = require('../controllers/usersController');
 
 const auth = require('../middlewares/auth');
